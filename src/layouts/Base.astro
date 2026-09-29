@@ -6,6 +6,12 @@ import Footer from '../components/Footer.astro'
 interface Props { title: string; description: string; darkHeader?: boolean }
 const { title, description, darkHeader = false } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site)
+
+/* Indexing is off unless it is explicitly switched on. The default is the safe
+   one because these pages carry real client names that nobody has been asked
+   about yet — a review deployment should be shareable, not discoverable. Set
+   PUBLIC_ALLOW_INDEXING=true when the site is genuinely going live. */
+const allowIndexing = import.meta.env.PUBLIC_ALLOW_INDEXING === 'true'
 ---
 <!doctype html>
 <html lang="en-GB">
@@ -15,6 +21,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {!allowIndexing && <meta name="robots" content="noindex, nofollow" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />

@@ -140,6 +140,35 @@ sources. Published at £200, per the Add-on Services T&Cs, and noted on the prod
   order values (one at £10,315.20, another at £12.92 a box). None are published; `clients.ts`
   records what was made, not what it cost.
 
+## Deployed
+
+| | |
+|---|---|
+| Shop | https://sf-shop-red.vercel.app |
+| Packaging design site | https://sf-packaging-site.vercel.app |
+
+Deploy with `../deploy.sh <site>` from the parent folder. It stages a copy without `.git`,
+because when the CLI can see a repository it sends commit metadata and Vercel blocks the build
+until the commit author matches a connected GitHub account.
+
+**Indexing is off by default.** Every page carries `noindex, nofollow` and `robots.txt`
+disallows everything, unless `PUBLIC_ALLOW_INDEXING=true` is set. That default is deliberate:
+these pages carry real client names nobody has been asked about yet, so a review deployment
+should be shareable but not discoverable. Switch it on when the permissions are actually in.
+
+**The enquiry form does not accept submissions on Vercel**, by design. A serverless filesystem is
+throwaway — a write to `/tmp` succeeds and then vanishes with the container — so storing an
+enquiry there and showing the thank-you page would tell a customer we have their details when
+nothing does. Without `RESEND_API_KEY` and `ENQUIRY_FORWARD_TO`, the form says so and points at
+the email address instead. Set those two and it starts working.
+
+**Astro's built-in CSRF check had to be replaced.** `security.checkOrigin` compares the Origin
+header against the request URL, and behind Vercel's proxy the request URL carries an internal
+host — so every genuinely same-origin form POST came back `403 Cross-site POST form submissions
+are forbidden`. The endpoint now runs the same check itself against `x-forwarded-host`, which is
+the header that survives the hop. Protection was moved, not removed: a cross-site Origin and a
+missing Origin are both still refused.
+
 ## The three sites
 
 | | | |

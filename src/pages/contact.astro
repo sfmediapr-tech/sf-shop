@@ -9,6 +9,7 @@ const ERRORS: Record<string, string> = {
   email: 'That email address does not look right — check it and send again.',
   storage: 'Something went wrong our end and the enquiry was not saved. Please email us directly.',
   unreadable: 'We could not read that submission. Please try again.',
+  nomail: 'The form is not connected on this deployment, so we have not taken your details. Please email us directly and we will pick it up.',
 }
 const error = ERRORS[Astro.url.searchParams.get('error') ?? '']
 

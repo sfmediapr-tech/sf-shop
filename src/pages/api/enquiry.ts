@@ -19,14 +19,54 @@ export const prerender = false
  */
 
 const LOG = process.env.ENQUIRY_LOG ?? '.data/enquiries.jsonl'
+
+/**
+ * On a serverless host the filesystem is throwaway: a write to /tmp succeeds and
+ * then vanishes with the container. Storing an enquiry there and showing the
+ * thank-you page would be the worst of both worlds — a customer told we have it,
+ * and nothing that does. So where storage cannot be trusted, forwarding is not
+ * optional, and without it the form says so instead of accepting the enquiry.
+ */
+const EPHEMERAL = Boolean(process.env.VERCEL || process.env.ENQUIRY_EPHEMERAL)
 const MAX = 4000
 
+/**
+ * Cross-site request forgery check, done here rather than by Astro.
+ *
+ * A browser always sends Origin on a form POST, so its absence is itself a
+ * signal. The host it is compared against is the forwarded one, because behind a
+ * proxy the request URL's own host is an internal address that no browser ever
+ * sees — which is exactly why Astro's version of this check rejected every real
+ * submission in production.
+ */
+function sameOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin')
+  if (!origin) return false
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
+  if (!host) return false
+  try {
+    return new URL(origin).host === host
+  } catch {
+    return false
+  }
+}
+
 export const POST: APIRoute = async ({ request, redirect, clientAddress }) => {
+  if (!sameOrigin(request)) {
+    return new Response('Cross-site POST form submissions are forbidden', { status: 403 })
+  }
+
   let form: FormData
   try {
     form = await request.formData()
   } catch {
     return redirect('/contact?error=unreadable', 303)
+  }
+
+  const canForward = Boolean(process.env.RESEND_API_KEY && process.env.ENQUIRY_FORWARD_TO)
+  if (EPHEMERAL && !canForward) {
+    // Nowhere durable to put it. Better to say so than to lose it politely.
+    return redirect('/contact?error=nomail', 303)
   }
 
   // Honeypot. A real person never fills a field they cannot see; a bot fills
@@ -53,13 +93,16 @@ export const POST: APIRoute = async ({ request, redirect, clientAddress }) => {
     ip: clientAddress ?? null,
   }
 
+  const path = EPHEMERAL ? '/tmp/enquiries.jsonl' : LOG
   try {
-    await mkdir(dirname(LOG), { recursive: true })
-    await appendFile(LOG, JSON.stringify(enquiry) + '\n', 'utf8')
+    await mkdir(dirname(path), { recursive: true })
+    await appendFile(path, JSON.stringify(enquiry) + '\n', 'utf8')
   } catch (e) {
-    // If it cannot be stored it must not be reported as received.
     console.error('[enquiry] could not be stored', e)
-    return redirect('/contact?error=storage', 303)
+    // Where the file is the only record, failing to write it means the enquiry
+    // does not exist and must not be reported as received. Where forwarding is
+    // the real delivery, a failed transient log is not worth losing a lead over.
+    if (!EPHEMERAL) return redirect('/contact?error=storage', 303)
   }
 
   const key = process.env.RESEND_API_KEY
