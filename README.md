@@ -75,6 +75,36 @@ customer never fills a basket and hits a dead button.
 
 Copy `.env.example` to `.env` and add test keys to switch it on. No keys are in this repo.
 
+## Enquiries
+
+Both the contact form and the basket's "send as an enquiry" fallback post to `/api/enquiry`.
+
+Every enquiry is **written to `.data/enquiries.jsonl` first and forwarded second**, in that order
+deliberately: if the mail provider is down, unconfigured or rejects the message, the enquiry still
+exists on disk rather than evaporating into a 500 while the customer is told it was sent. If it
+cannot even be stored, the customer is told so and pointed at the email address — the endpoint
+never reports a success it did not achieve.
+
+Forwarding needs `RESEND_API_KEY` and `ENQUIRY_FORWARD_TO`. **Until those are set, that file is
+the inbox** — somebody has to read it, or enquiries sit there unanswered.
+
+A hidden honeypot field catches bots: a filled `website` field returns the normal thank-you page
+and stores nothing, so the bot learns nothing.
+
+Verified against the running endpoint:
+
+| Submitted | Result |
+|---|---|
+| Valid enquiry | `303 → /enquiry-received`, one line appended |
+| No name | `303 → /contact?error=missing` |
+| `not-an-email` | `303 → /contact?error=email` |
+| Honeypot filled | `303 → /enquiry-received`, **nothing stored** |
+| Full browser round trip | Stored, confirmation page shown |
+
+`/contact` is the one server-rendered page on each site. A prerendered page is built once with no
+query string, so the error the endpoint redirects back with could never appear — which is exactly
+the bug that shipped before this was tested.
+
 ## The quote builder
 
 `/quote`. Six questions, and it does the one check the packaging design site could not:
@@ -104,7 +134,6 @@ sources. Published at £200, per the Add-on Services T&Cs, and noted on the prod
   open decision as the packaging design site.
 - **`NAMES_CLEARED` is `false`** in `clients.ts`. Client names appear as a record of work
   delivered; pack photography, quotes and logos wait on each brand agreeing.
-- **`/api/enquiry` does not exist.** Both forms post to it.
 - **No order record.** Stripe holds the order; nothing writes it into The Hive yet. That is the
   obvious next integration, since The Hive already generates, signs and invoices quotes.
 - **Commercially sensitive figures were left out.** The overview carries client unit prices and

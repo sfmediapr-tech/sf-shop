@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro'
+import { CONTACT } from '../data/site'
+---
+<Base title="Enquiry received — Supplement Factory" description="Thank you. We have your enquiry.">
+  <section class="section">
+    <div class="page page--narrow">
+      <span class="eyebrow">Received</span>
+      <h1>Thank you — we have it.</h1>
+      <p class="lead" style="margin-top: var(--s5)">
+        {CONTACT.namedPerson ?? 'A named member of the team'} will come back to you within
+        {' '}{CONTACT.responseTime.toLowerCase()} — with what we need to quote it properly, rather
+        than a number we would have to revise.
+      </p>
+
+      <div class="note" style="margin-top: var(--s7)">
+        If it is urgent, email <a href={`mailto:${CONTACT.salesEmail}`}>{CONTACT.salesEmail}</a> and
+        say so in the subject line.
+      </div>
+
+      <div class="btn-row" style="margin-top: var(--s7)">
+        <a href="/" class="btn btn--ink">Back to the site</a>
+        <a href="/shop" class="btn btn--ghost">Browse the shop</a>
+      </div>
+    </div>
+  </section>
+</Base>

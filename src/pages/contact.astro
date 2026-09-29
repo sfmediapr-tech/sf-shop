@@ -1,6 +1,22 @@
 ---
 import Base from '../layouts/Base.astro'
 import { CONTACT, COMMERCE_RULE } from '../data/site'
+
+/* The endpoint redirects back here with a reason rather than swallowing a
+   failure, so the visitor is told what to change. */
+const ERRORS: Record<string, string> = {
+  missing: 'We need at least your name and email to reply.',
+  email: 'That email address does not look right — check it and send again.',
+  storage: 'Something went wrong our end and the enquiry was not saved. Please email us directly.',
+  unreadable: 'We could not read that submission. Please try again.',
+}
+const error = ERRORS[Astro.url.searchParams.get('error') ?? '']
+
+/* Server-rendered, unlike the rest of the site: a prerendered page is built once
+   with no query string, so the error the endpoint redirects back with would
+   never appear. This page needs a server anyway, since the form it carries posts
+   to one. */
+export const prerender = false
 ---
 <Base title="Contact — Supplement Factory" description="Talk to sales about manufacturing, or about anything you have bought in the shop.">
   <section class="section--tight">
@@ -32,6 +48,8 @@ import { CONTACT, COMMERCE_RULE } from '../data/site'
       <form class="form" method="post" action="/api/enquiry">
         <h2>Send an enquiry</h2>
 
+        {error && <p class="note note--pencil small" role="alert">{error}</p>}
+
         <label>Your name<input type="text" name="name" required autocomplete="name" /></label>
         <label>Email<input type="email" name="email" required autocomplete="email" /></label>
         <label>Brand or company<input type="text" name="company" autocomplete="organization" /></label>
@@ -39,6 +57,11 @@ import { CONTACT, COMMERCE_RULE } from '../data/site'
         <label>What are you making?
           <textarea name="brief" rows="4" placeholder="Format, rough volume, the markets you sell into, and when you want to launch"></textarea>
         </label>
+
+        <!-- Honeypot. Hidden from people, irresistible to bots. -->
+        <div class="form__hp" aria-hidden="true">
+          <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
 
         <button type="submit" class="btn btn--primary">Send enquiry</button>
         <p class="micro form__note">
@@ -66,4 +89,5 @@ import { CONTACT, COMMERCE_RULE } from '../data/site'
   .form textarea { resize: vertical; }
   .form button { justify-self: start; margin-top: var(--s2); }
   .form__note { color: var(--ink-3); margin: 0; }
+  .form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 </style>

@@ -4,3 +4,6 @@ dist
 .env
 .env.local
 .DS_Store
+
+# Enquiries land here until forwarding is configured.
+.data/
