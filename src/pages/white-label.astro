@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro'
+import { RANGES, MOQ_CONFLICT_NOTE } from '../data/whitelabel'
+---
+<Base
+  title="White label supplements — ready-made formulations under your brand"
+  description="Eight off-the-shelf ranges: capsules, probiotics, tablets, powders, softgels, liquid, gummies and pet. Ready to pack under your own brand."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">White label</span>
+      <h1>Ready-made formulations, your brand on the front.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        Formulations already developed, tested and ready to pack. Faster to market than bespoke,
+        because the product development is already done — at higher minimums.
+      </p>
+      <p class="note note--warn" style="margin-top: var(--s6)">{MOQ_CONFLICT_NOTE}</p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      <div class="grid grid-2">
+        {RANGES.map((r) => (
+          <article class="wl">
+            <div>
+              <h2>{r.name}</h2>
+              <p class="small" style="margin-top: var(--s3); color: var(--ink-2)">{r.detail}</p>
+            </div>
+
+            {r.topSellers.length > 0 && (
+              <div>
+                <h3 class="micro" style="margin-bottom: var(--s2)">Top sellers</h3>
+                <ul class="chips">{r.topSellers.map((t) => <li class="tag">{t}</li>)}</ul>
+              </div>
+            )}
+
+            <div>
+              <h3 class="micro" style="margin-bottom: var(--s2)">Packed in</h3>
+              <p class="small">{r.packing.join(' · ')}</p>
+            </div>
+
+            <div class="wl__foot">
+              <div>
+                <span class="micro">Minimum order</span>
+                <strong class="spec">{r.moq}</strong>
+              </div>
+              <a href={`/quote?range=${r.slug}`} class="btn btn--ghost btn--sm">Quote this</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .wl {
+    display: flex; flex-direction: column; gap: var(--s5);
+    padding: var(--s6); border: 1px solid var(--rule); border-radius: var(--r-lg);
+  }
+  .wl h2 { font-size: var(--t-h3); }
+  .wl__foot {
+    display: flex; flex-wrap: wrap; gap: var(--s4); align-items: center; justify-content: space-between;
+    margin-top: auto; padding-top: var(--s4); border-top: 1px solid var(--rule);
+  }
+  .wl__foot > div { display: grid; gap: 2px; }
+  .wl__foot strong { font-size: var(--t-small); }
+</style>

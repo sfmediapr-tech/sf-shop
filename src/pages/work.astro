@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro'
+import { CLIENT_PRODUCTS, PORTFOLIO, SHOWCASE, NAMES_CLEARED } from '../data/clients'
+---
+<Base
+  title="Our work — products we have made and packs we have designed"
+  description="Products manufactured and packs designed across pouches, bottles, tubs, sticks, cartons and pet, from roughly 60 client artworks."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">Our work</span>
+      <h1>What we have actually made.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        Around 60 client artworks between November 2025 and September 2026, across every format we
+        run. Below is what was made, in what pack, and whether we did the artwork too.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      <h2>Products made here</h2>
+      <div class="table-wrap" style="margin-top: var(--s5)">
+        <table class="table">
+          <thead><tr><th>Client</th><th>Product</th><th>Pack</th><th>What we did</th></tr></thead>
+          <tbody>
+            {CLIENT_PRODUCTS.map((c) => (
+              <tr>
+                <td><strong>{c.client}</strong></td>
+                <td style="color: var(--ink-2)">{c.product}</td>
+                <td class="spec">{c.pack}</td>
+                <td><span class="tag">{c.engagement}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight section--ground">
+    <div class="page">
+      <h2>Design portfolio, by format</h2>
+      <div class="grid grid-3" style="margin-top: var(--s6)">
+        {PORTFOLIO.map((p) => (
+          <div class="pf">
+            <h3 class="micro">{p.format}</h3>
+            <ul class="chips">{p.brands.map((b) => <li class="tag">{b}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top: var(--s8)">
+        <h3 class="micro" style="margin-bottom: var(--s4)">Also in the showcase</h3>
+        <ul class="chips">{SHOWCASE.map((s) => <li class="tag">{s}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  {!NAMES_CLEARED && (
+    <section class="section--tight">
+      <div class="page">
+        <p class="note">
+          Shown as a record of work delivered. Pack photography, client quotes and logos go up once
+          each brand has agreed to them — none of these are published as an endorsement.
+        </p>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .pf { display: grid; gap: var(--s3); align-content: start; padding-top: var(--s4); border-top: 2px solid var(--gold); }
+</style>

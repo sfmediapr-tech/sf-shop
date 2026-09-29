@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro'
+import { CONTACT } from '../data/site'
+---
+<Base title="Order confirmed — Supplement Factory" description="Thank you. Your order is confirmed.">
+  <section class="section">
+    <div class="page page--narrow">
+      <span class="eyebrow">Confirmed</span>
+      <h1>Thank you — your order is in.</h1>
+      <p class="lead" style="margin-top: var(--s5)">
+        Stripe has emailed you a receipt. A named member of the team will be in touch within
+        {CONTACT.responseTime.toLowerCase()} to start the work, and will tell you exactly what we
+        need from you before the clock starts.
+      </p>
+
+      <div class="note" style="margin-top: var(--s7)">
+        If you bought a design service, the next step is the questionnaire — it becomes your brief,
+        and the four-to-six weeks runs from when it comes back complete.
+      </div>
+
+      <div class="btn-row" style="margin-top: var(--s7)">
+        <a href="/" class="btn btn--ink">Back to the site</a>
+        <a href="/contact" class="btn btn--ghost">Contact the team</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // The basket has been paid for, so it should not still be sitting there on
+    // the customer's next visit.
+    try { localStorage.removeItem('sf-basket-v1') } catch {}
+  </script>
+</Base>

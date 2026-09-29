@@ -1,0 +1,41 @@
+---
+import AddToBasket from '../islands/AddToBasket'
+import { gbp, type Product } from '../data/shop'
+
+interface Props { product: Product }
+const { product } = Astro.props
+---
+<article class="pcard">
+  <div class="pcard__head">
+    <h3>{product.name}</h3>
+    <p class="micro">{product.unit}</p>
+  </div>
+
+  <p class="small pcard__blurb">{product.blurb}</p>
+
+  {product.includes && (
+    <ul class="inclusions">{product.includes.map((i) => <li>{i}</li>)}</ul>
+  )}
+
+  {product.note && <p class="note small">{product.note}</p>}
+
+  <div class="pcard__foot">
+    <p class="price">{gbp(product.pricePence)}<sup>+VAT</sup></p>
+    <AddToBasket client:load sku={product.sku} />
+  </div>
+</article>
+
+<style>
+  .pcard {
+    display: flex; flex-direction: column; gap: var(--s4);
+    padding: var(--s6); background: var(--paper);
+    border: 1px solid var(--rule); border-radius: var(--r-lg);
+  }
+  .pcard__head p { margin: var(--s2) 0 0; }
+  .pcard__blurb { color: var(--ink-2); }
+  .pcard__foot {
+    display: flex; flex-wrap: wrap; gap: var(--s4);
+    align-items: center; justify-content: space-between;
+    margin-top: auto; padding-top: var(--s5); border-top: 1px solid var(--rule);
+  }
+</style>

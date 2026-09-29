@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro'
+import { COMPONENTS, FINISHES, RULES } from '../data/packaging'
+---
+<Base
+  title="Packaging and components — bottles, pouches, sticks, cartons and blisters"
+  description="We supply the finished pack: bottles, pots, closures, labels, stand-up pouches, stick packs, sachets, cartons, blisters, tubes, outer cases and leaflets."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">Packaging</span>
+      <h1>We supply the finished pack, not just the fill.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        These are the components that appear in our own specifications and artwork files, with the
+        sizes we have actually run. Components are quoted with the product — there is no per-unit
+        component price list, and inventing one on a website would not survive contact with a
+        printer's quote.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      <div class="grid grid-3">
+        {COMPONENTS.map((c) => (
+          <article class="comp">
+            <h2>{c.name}</h2>
+            <div>
+              <h3 class="micro">Sizes we have run</h3>
+              <ul class="comp__list spec">{c.sizes.map((s) => <li>{s}</li>)}</ul>
+            </div>
+            <div>
+              <h3 class="micro">Material and finish</h3>
+              <p class="small">{c.materials.join(' · ')}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ground">
+    <div class="page split">
+      <div>
+        <span class="eyebrow">Finishes</span>
+        <h2>What we can put on the surface</h2>
+        <p class="lead" style="margin-top: var(--s5)">Quoted separately from the design work.</p>
+      </div>
+      <ul class="chips chips--lg">{FINISHES.map((f) => <li class="tag">{f}</li>)}</ul>
+    </div>
+  </section>
+
+  <!-- Two rules that cost real money when missed. Better on the page than in a
+       follow-up email after the invoice. -->
+  <section class="section section--dark">
+    <div class="page">
+      <span class="eyebrow">Before you order</span>
+      <h2>Two things that cost money if they slip</h2>
+      <div class="grid grid-2" style="margin-top: var(--s7); max-width: 940px">
+        {RULES.map((r) => (
+          <article class="ruleblock">
+            <h3>{r.headline}</h3>
+            <p>{r.detail}</p>
+          </article>
+        ))}
+      </div>
+      <div class="btn-row" style="margin-top: var(--s8)">
+        <a href="/shop/design" class="btn btn--primary">Get the artwork done here</a>
+        <a href="/quote" class="btn btn--ghost">Quote a pack</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .comp {
+    display: flex; flex-direction: column; gap: var(--s5);
+    padding: var(--s6); border: 1px solid var(--rule); border-radius: var(--r-lg);
+  }
+  .comp h2 { font-size: var(--t-h3); }
+  .comp h3 { margin-bottom: var(--s2); }
+  .comp__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s1); font-size: var(--t-small); color: var(--ink-2); }
+  .comp p { margin: 0; color: var(--ink-2); }
+
+  .ruleblock { border-top: 2px solid var(--gold); padding-top: var(--s5); }
+  .ruleblock h3 { color: var(--on-dark); margin-bottom: var(--s3); }
+  .ruleblock p { color: var(--on-dark-2); }
+
+  .chips--lg .tag { font-size: var(--t-small); padding: var(--s2) var(--s4); text-transform: none; letter-spacing: 0; }
+</style>

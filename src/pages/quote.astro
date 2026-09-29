@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro'
+import QuoteBuilder from '../islands/QuoteBuilder'
+
+const preset = Astro.url.searchParams.get('format') ?? ''
+---
+<Base
+  title="Get a manufacturing quote — build a specification"
+  description="Tell us the format, the volume and the market and we will price it. Volumes are checked against the published minimum before you send anything."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">Get a quote</span>
+      <h1>Tell us what you are making.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        Six questions. The specification builds as you answer, your volume is checked against the
+        published minimum before you send it, and anything that will change the quote gets flagged
+        here rather than in the third email.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      <QuoteBuilder client:load presetFormat={preset} />
+    </div>
+  </section>
+</Base>

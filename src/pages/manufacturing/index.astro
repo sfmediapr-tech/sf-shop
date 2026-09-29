@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro'
+import { FORMATS, QUOTE_ONLY } from '../../data/formats'
+---
+<Base
+  title="Contract manufacturing — ten supplement formats, bulk or finished-packed"
+  description="Capsules, tablets, softgels, gummies, powders, liquids and gels, licaps, duocaps, beadlets and functional foods. MOQs from 200 units, lead times 6 to 12 weeks."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">Manufacturing</span>
+      <h1>Ten formats, bulk or finished-packed.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        We formulate, make, test and pack under your brand. Every format below is available as bulk
+        product or as a finished retail pack with your artwork on it.
+      </p>
+      <p class="note" style="margin-top: var(--s6)">{QUOTE_ONLY}</p>
+      <div class="btn-row" style="margin-top: var(--s6)">
+        <a href="/quote" class="btn btn--primary">Build a quote</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>Format</th><th>Packaging</th><th>MOQ</th><th>Lead time</th><th></th></tr>
+          </thead>
+          <tbody>
+            {FORMATS.map((f) => (
+              <tr>
+                <td>
+                  <strong><a href={`/manufacturing/${f.slug}`}>{f.name}</a></strong>
+                  <p class="small" style="margin: var(--s1) 0 0; color: var(--ink-3)">{f.summary}</p>
+                </td>
+                <td style="color: var(--ink-2)">{f.packaging.join(' · ')}</td>
+                <td class="spec">{f.moq}</td>
+                <td class="spec">{f.leadTime}</td>
+                <td><a href={`/manufacturing/${f.slug}`} class="small">Details &rarr;</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,115 @@
+---
+import Base from '../../layouts/Base.astro'
+import ProductCard from '../../components/ProductCard.astro'
+import { PRODUCTS, LAB_TESTS, QUOTED_SERVICES, gbp } from '../../data/shop'
+
+const design = PRODUCTS.filter((p) => p.category === 'design')
+const compliance = PRODUCTS.filter((p) => p.category === 'compliance')
+const addOns = PRODUCTS.filter((p) => p.category === 'add-on')
+---
+
+<Base
+  title="Shop — design, compliance checks, add-ons and lab testing"
+  description="Fixed-price services you can buy outright: label and packaging design from £750, compliance checks from £750, add-ons from £100 and SF Lab testing from £40."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">Shop</span>
+      <h1>Fixed price, fixed scope, bought outright.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        Everything on this page has a published price because it has a defined scope. Manufacturing
+        does not appear here — it is priced against your volume, format and market, and it is
+        <a href="/quote">quoted</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight" id="design">
+    <div class="page">
+      <div class="head-row">
+        <h2>Design services</h2>
+        <a href="/shop/design" class="small">All design services &rarr;</a>
+      </div>
+      <div class="grid grid-2" style="margin-top: var(--s6)">
+        {design.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight section--ground" id="compliance">
+    <div class="page">
+      <div class="head-row">
+        <h2>Compliance checks</h2>
+        <a href="/shop/compliance" class="small">More on the check &rarr;</a>
+      </div>
+      <div class="grid grid-2" style="margin-top: var(--s6)">
+        {compliance.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" id="add-ons">
+    <div class="page">
+      <div class="head-row">
+        <h2>Add-ons</h2>
+        <a href="/shop/add-ons" class="small">All add-ons &rarr;</a>
+      </div>
+      <p class="note" style="margin-top: var(--s5)">
+        Add-ons attach to a design project. Buy them alongside a tier, or add them later against an
+        existing job — tell us which project when you order.
+      </p>
+      <div class="grid grid-3" style="margin-top: var(--s6)">
+        {addOns.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight section--ground" id="lab">
+    <div class="page">
+      <div class="head-row">
+        <h2>SF Lab testing</h2>
+        <a href="/shop/lab-testing" class="small">Full test menu &rarr;</a>
+      </div>
+      <p class="lead" style="margin-top: var(--s5); max-width: 48ch">
+        {LAB_TESTS.length} tests, priced per sample, from {gbp(Math.min(...LAB_TESTS.map((t) => t.pricePence)))}.
+      </p>
+      <div class="btn-row" style="margin-top: var(--s6)">
+        <a href="/shop/lab-testing" class="btn btn--ink">Choose tests</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="page">
+      <span class="eyebrow">Quoted, not bought</span>
+      <h2>Services with no fixed price</h2>
+      <p class="lead" style="margin-top: var(--s5); max-width: 52ch">
+        These are real services we sell. They are not in the basket because the price genuinely
+        depends on the project — and in one case because two internal proposals disagree, which is
+        not a thing to resolve by guessing on a website.
+      </p>
+      <div class="grid grid-2" style="margin-top: var(--s7)">
+        {QUOTED_SERVICES.map((s) => (
+          <article class="qcard">
+            <div>
+              <h3>{s.name}</h3>
+              <p class="small" style="margin-top: var(--s2); color: var(--ink-2)">{s.blurb}</p>
+            </div>
+            <p class="price price--quoted">{s.priceLabel}</p>
+            {s.unresolved && <p class="note note--warn small">{s.unresolved}</p>}
+            <a href={`/services#${s.slug}`} class="small qcard__link">What is included &rarr;</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .qcard {
+    display: flex; flex-direction: column; gap: var(--s4);
+    padding: var(--s6); border: 1px solid var(--rule); border-radius: var(--r-lg);
+  }
+  .qcard__link { margin-top: auto; padding-top: var(--s3); font-weight: 700; color: var(--gold-lo); text-decoration: none; }
+  .qcard__link:hover { text-decoration: underline; }
+</style>

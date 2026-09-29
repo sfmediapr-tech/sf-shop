@@ -1,0 +1,57 @@
+---
+import { NAV, SITE, CONTACT, COMMERCE_RULE } from '../data/site'
+---
+<footer class="ftr">
+  <div class="page">
+    <div class="ftr__top">
+      <div>
+        <p class="ftr__line">{SITE.tagline}</p>
+        <p class="small ftr__rule">
+          <strong>Bought online:</strong> {COMMERCE_RULE.buyable}<br />
+          <strong>Quoted:</strong> {COMMERCE_RULE.quoted}
+        </p>
+      </div>
+
+      <nav class="ftr__nav" aria-label="Footer">
+        {NAV.map((col) => (
+          <div>
+            <h2 class="micro">{col.label}</h2>
+            <ul>{(col.children ?? [col]).map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
+          </div>
+        ))}
+      </nav>
+    </div>
+
+    <div class="ftr__bottom">
+      <p class="small">
+        Part of <a href={SITE.mainSite}>Supplement Factory</a>.
+      </p>
+      <p class="small ftr__contact">
+        {CONTACT.namedPerson ?? 'Sales'} · <a href={`mailto:${CONTACT.salesEmail}`}>{CONTACT.salesEmail}</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr { background: var(--dark); color: var(--on-dark-2); padding-block: var(--s9) var(--s6); margin-top: var(--s10); }
+  .ftr__top {
+    display: grid; gap: var(--s8); grid-template-columns: minmax(0,1fr);
+    padding-bottom: var(--s8); border-bottom: 1px solid var(--rule-dark);
+  }
+  @media (min-width: 900px) { .ftr__top { grid-template-columns: minmax(0,.9fr) minmax(0,1.5fr); } }
+  .ftr__line { font-size: var(--t-h3); color: var(--on-dark); letter-spacing: -.015em; line-height: 1.25; max-width: 18em; }
+  .ftr__rule { margin-top: var(--s5); color: var(--on-dark-3); max-width: 42ch; line-height: 1.5; }
+  .ftr__rule strong { color: var(--on-dark-2); }
+
+  .ftr__nav { display: grid; gap: var(--s6); grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); }
+  .ftr__nav h2 { color: var(--on-dark-3); margin-bottom: var(--s3); font-weight: 700; }
+  .ftr__nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+  .ftr__nav a { font-size: var(--t-small); text-decoration: none; }
+  .ftr__nav a:hover { color: var(--gold-hi); }
+
+  .ftr__bottom { display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between; padding-top: var(--s5); }
+  .ftr__bottom p { margin: 0; max-width: none; }
+  .ftr__bottom a { color: var(--gold-hi); }
+  .ftr__contact { color: var(--on-dark-3); }
+</style>

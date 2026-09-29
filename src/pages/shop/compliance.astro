@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro'
+import ProductCard from '../../components/ProductCard.astro'
+import { PRODUCTS, gbp } from '../../data/shop'
+
+const items = PRODUCTS.filter((p) => p.category === 'compliance')
+const from = Math.min(...items.map((p) => p.pricePence))
+---
+<Base
+  title="Compliance checks — Supplement Factory"
+  description="Artwork you already have, reviewed by our Technical and Quality team against the rules of your market. From ${gbp(from)} plus VAT."
+>
+  <section class="section--tight">
+    <div class="page">
+      <p class="micro"><a href="/shop">Shop</a></p>
+      <h1 style="margin-top: var(--s3)">Compliance checks</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 52ch">Artwork you already have, reviewed by our Technical and Quality team against the rules of your market.</p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      <div class="grid grid-2">
+        {items.map((p) => <ProductCard product={p} />)}
+      </div>
+      <p class="small" style="margin-top: var(--s6); color: var(--ink-3)">
+        VAT applies to UK-based clients and is added at checkout.
+      </p>
+    </div>
+  </section>
+</Base>

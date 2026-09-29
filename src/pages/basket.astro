@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro'
+import BasketIsland from '../islands/Basket'
+
+/* Whether payment is switched on is decided at build time from the environment,
+   so the page can tell the truth about it rather than letting a customer fill a
+   basket and hit a dead checkout button. */
+const stripeConfigured = Boolean(import.meta.env.STRIPE_SECRET_KEY)
+---
+<Base title="Your basket — Supplement Factory" description="Review your order and check out.">
+  <section class="section--tight">
+    <div class="page">
+      <h1>Your basket</h1>
+    </div>
+  </section>
+  <section class="section--tight">
+    <div class="page">
+      <BasketIsland client:load stripeConfigured={stripeConfigured} />
+    </div>
+  </section>
+</Base>

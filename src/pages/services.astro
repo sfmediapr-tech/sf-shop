@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro'
+import { QUOTED_SERVICES, PRODUCTS, gbp } from '../data/shop'
+
+const designFrom = Math.min(...PRODUCTS.filter((p) => p.category === 'design').map((p) => p.pricePence))
+---
+<Base
+  title="Services — formulation, branding, media, export and the Brand Accelerator"
+  description="Formulation, branding packages, SF Media, product registration, market research, export support and the three-phase SF Brand Accelerator."
+>
+  <section class="section--tight">
+    <div class="page">
+      <span class="eyebrow">Services</span>
+      <h1>The work that sits around the manufacturing.</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 54ch">
+        Everything here is quoted per project. The fixed-price services — design, compliance checks,
+        add-ons and lab tests — are <a href="/shop">in the shop</a>, from {gbp(designFrom)}.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      {QUOTED_SERVICES.map((s) => (
+        <article class="svc" id={s.slug}>
+          <div class="svc__head">
+            <div>
+              <h2>{s.name}</h2>
+              <p class="lead" style="margin-top: var(--s3)">{s.blurb}</p>
+            </div>
+            <p class="price price--quoted">{s.priceLabel}</p>
+          </div>
+
+          <ul class="inclusions svc__inc">{s.detail.map((d) => <li>{d}</li>)}</ul>
+
+          {s.unresolved && <p class="note note--warn small">{s.unresolved}</p>}
+
+          <a href="/contact" class="btn btn--ghost btn--sm svc__cta">Enquire about {s.name}</a>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .svc { padding: var(--s7) 0; border-top: 1px solid var(--rule); display: grid; gap: var(--s5); }
+  .svc:last-child { border-bottom: 1px solid var(--rule); }
+  .svc__head { display: flex; flex-wrap: wrap; gap: var(--s5); align-items: flex-start; justify-content: space-between; }
+  .svc__head h2 { font-size: var(--t-h2); }
+  .svc__inc { max-width: var(--measure); }
+  .svc__cta { justify-self: start; }
+</style>

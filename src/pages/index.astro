@@ -1,0 +1,196 @@
+---
+import Base from '../layouts/Base.astro'
+import { FORMATS } from '../data/formats'
+import { PRODUCTS, LAB_TESTS, gbp } from '../data/shop'
+import { RANGES } from '../data/whitelabel'
+import { COMPONENTS } from '../data/packaging'
+import { COMMERCE_RULE, SITE } from '../data/site'
+
+const designFrom = Math.min(...PRODUCTS.filter((p) => p.category === 'design').map((p) => p.pricePence))
+const labFrom = Math.min(...LAB_TESTS.map((t) => t.pricePence))
+---
+
+<Base
+  title="Supplement Factory — contract manufacturing, packaging and brand services"
+  description="Ten manufacturing formats, bulk or finished-packed, plus a white-label range. Design, compliance checks and lab testing can be bought outright; manufacturing is quoted against your volume and market."
+  darkHeader
+>
+  <section class="section--dark hero">
+    <div class="page">
+      <span class="eyebrow">Contract manufacturing</span>
+      <h1 class="hero__h1">{SITE.tagline}</h1>
+      <p class="lead hero__lead">
+        Ten delivery formats, bulk or finished-packed, under your own brand — with the formulation,
+        the packaging, the compliance and the testing in the same building.
+      </p>
+
+      <div class="btn-row">
+        <a href="/quote" class="btn btn--primary">Get a quote</a>
+        <a href="/shop" class="btn btn--ghost">Shop services</a>
+      </div>
+
+      <div class="hero__stats stats">
+        <div class="stat"><span class="micro">Formats</span><strong>10</strong></div>
+        <div class="stat"><span class="micro">MOQ from</span><strong>200 units</strong></div>
+        <div class="stat"><span class="micro">Lead time</span><strong>6–12 weeks</strong></div>
+        <div class="stat"><span class="micro">Accreditation</span><strong>BRCGS AA · GMP</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The commercial rule, said plainly and early. A visitor should never be in
+       doubt about what they can buy and what has to be quoted. -->
+  <section class="section--tight section--ground">
+    <div class="page">
+      <div class="rule-split">
+        <div>
+          <span class="tag tag--gold">Buy online</span>
+          <p class="small">{COMMERCE_RULE.buyable}</p>
+          <a href="/shop" class="small rule-split__link">Go to the shop &rarr;</a>
+        </div>
+        <div>
+          <span class="tag tag--quote">Quoted</span>
+          <p class="small">{COMMERCE_RULE.quoted}</p>
+          <a href="/quote" class="small rule-split__link">Build a quote &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="page">
+      <div class="head-row">
+        <div>
+          <span class="eyebrow">Manufacturing</span>
+          <h2>Ten formats, bulk or finished-packed</h2>
+        </div>
+        <a href="/manufacturing" class="btn btn--ghost">All formats</a>
+      </div>
+
+      <div class="grid grid-3" style="margin-top: var(--s7)">
+        {FORMATS.slice(0, 6).map((f) => (
+          <a href={`/manufacturing/${f.slug}`} class="ftile">
+            <h3>{f.name}</h3>
+            <p class="small">{f.summary}</p>
+            <div class="ftile__foot">
+              <span class="micro spec">MOQ {f.moq.split(' · ')[0]}</span>
+              <span class="micro spec">{f.leadTime.split(' · ')[0]}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ground">
+    <div class="page">
+      <div class="head-row">
+        <div>
+          <span class="eyebrow">Shop</span>
+          <h2>The things you can buy outright</h2>
+        </div>
+        <a href="/shop" class="btn btn--ink">Browse the shop</a>
+      </div>
+
+      <div class="grid grid-4" style="margin-top: var(--s7)">
+        <a href="/shop/design" class="stile">
+          <h3>Design services</h3>
+          <p class="price">From {gbp(designFrom)}</p>
+          <span class="small">Label and packaging design, with a compliance check included</span>
+        </a>
+        <a href="/shop/compliance" class="stile">
+          <h3>Compliance checks</h3>
+          <p class="price">From £750</p>
+          <span class="small">Artwork you already have, reviewed against your market</span>
+        </a>
+        <a href="/shop/add-ons" class="stile">
+          <h3>Add-ons</h3>
+          <p class="price">From £100</p>
+          <span class="small">Languages, revisions, territories, mockups</span>
+        </a>
+        <a href="/shop/lab-testing" class="stile">
+          <h3>Lab testing</h3>
+          <p class="price">From {gbp(labFrom)}</p>
+          <span class="small">Micro, metals, vitamins, allergens, pesticides</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="page split">
+      <div>
+        <span class="eyebrow">White label</span>
+        <h2>Ready-made formulations under your brand</h2>
+        <p class="lead" style="margin-top: var(--s5)">
+          Eight ranges already developed and ready to pack, from nootropic capsules to pet chews.
+          Faster than bespoke, at higher minimums.
+        </p>
+        <div class="btn-row" style="margin-top: var(--s6)">
+          <a href="/white-label" class="btn btn--ink">See the range</a>
+        </div>
+      </div>
+      <ul class="chips chips--lg">
+        {RANGES.map((r) => <li class="tag">{r.name.split(' — ')[0]}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="page split">
+      <div>
+        <span class="eyebrow">Packaging</span>
+        <h2>We supply the finished pack, not just the fill</h2>
+        <p class="lead" style="margin-top: var(--s5)">
+          Bottles, pots, pouches, stick packs, sachets, blisters, cartons and tubes — filled with
+          your product, printed with your artwork, checked before it goes to press.
+        </p>
+        <div class="btn-row" style="margin-top: var(--s6)">
+          <a href="/packaging" class="btn btn--primary">Packaging and components</a>
+        </div>
+      </div>
+      <ul class="chips chips--lg">
+        {COMPONENTS.map((c) => <li class="tag tag--dark">{c.name}</li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: var(--s9) var(--s8); }
+  .hero__h1 { font-size: var(--t-hero); max-width: 14em; }
+  .hero__lead { margin-top: var(--s5); max-width: 48ch; }
+  .hero .btn-row { margin-top: var(--s6); }
+  .hero__stats { margin-top: var(--s8); padding-top: var(--s5); border-top: 1px solid var(--rule-dark); }
+
+  .rule-split { display: grid; gap: var(--s6); grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+  .rule-split > div { display: grid; gap: var(--s3); align-content: start; }
+  .rule-split p { color: var(--ink-2); margin: 0; }
+  .rule-split span.tag { justify-self: start; }
+  .rule-split__link { font-weight: 700; color: var(--gold-lo); text-decoration: none; }
+  .rule-split__link:hover { text-decoration: underline; }
+
+  .ftile {
+    display: flex; flex-direction: column; gap: var(--s3);
+    padding: var(--s6); border: 1px solid var(--rule); border-radius: var(--r-lg);
+    text-decoration: none; transition: border-color .16s var(--ease), transform .16s var(--ease);
+  }
+  .ftile:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .ftile p { color: var(--ink-2); margin: 0; }
+  .ftile__foot {
+    display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between;
+    margin-top: auto; padding-top: var(--s4); border-top: 1px solid var(--rule);
+  }
+
+  .stile {
+    display: grid; gap: var(--s3); align-content: start;
+    padding: var(--s6); background: var(--paper);
+    border: 1px solid var(--rule); border-radius: var(--r-lg);
+    text-decoration: none; transition: border-color .16s var(--ease), transform .16s var(--ease);
+  }
+  .stile:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .stile span { color: var(--ink-3); }
+
+  .chips--lg .tag { font-size: var(--t-small); padding: var(--s2) var(--s4); text-transform: none; letter-spacing: 0; }
+  .tag--dark { border-color: var(--rule-dark); color: var(--on-dark-2); }
+</style>

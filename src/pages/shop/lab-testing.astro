@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro'
+import AddToBasket from '../../islands/AddToBasket'
+import { LAB_TESTS, gbp } from '../../data/shop'
+
+const groups = [...new Set(LAB_TESTS.map((t) => t.group))]
+---
+<Base
+  title="SF Lab testing — micro, metals, vitamins, allergens and pesticides"
+  description="Nine tests priced per sample: microbiology from £100, heavy metals from £70, vitamin assays from £59, allergens from £40, 9-nut screen £897, pesticides £316."
+>
+  <section class="section--tight">
+    <div class="page">
+      <p class="micro"><a href="/shop">Shop</a></p>
+      <h1 style="margin-top: var(--s3)">SF Lab testing</h1>
+      <p class="lead" style="margin-top: var(--s5); max-width: 52ch">
+        Priced per sample, buyable per test. Pick what you need and add it to the basket — or send
+        us the product and we will tell you which panel it actually requires.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="page">
+      {groups.map((g) => (
+        <div class="lab__group">
+          <h2 class="micro">{g}</h2>
+          <ul class="lab__list">
+            {LAB_TESTS.filter((t) => t.group === g).map((t) => (
+              <li class="lab__row">
+                <div>
+                  <strong>{t.name}</strong>
+                  {t.detail && <p class="small">{t.detail}</p>}
+                </div>
+                <span class="lab__price spec">{gbp(t.pricePence)}</span>
+                <AddToBasket client:load sku={t.sku} label="Add" variant="ghost" />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      <p class="note" style="margin-top: var(--s7)">
+        Prices are per test, per sample, plus VAT. Vitamin assays and single allergens vary by
+        method — the price shown is the entry point, and we confirm the exact figure before running
+        anything.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lab__group { margin-bottom: var(--s8); }
+  .lab__group h2 { margin-bottom: var(--s4); }
+  .lab__list { list-style: none; margin: 0; padding: 0; }
+  .lab__row {
+    display: grid; gap: var(--s4);
+    grid-template-columns: 1fr auto auto; align-items: center;
+    padding: var(--s4) 0; border-top: 1px solid var(--rule);
+  }
+  .lab__row:last-child { border-bottom: 1px solid var(--rule); }
+  .lab__row p { margin: var(--s1) 0 0; color: var(--ink-3); }
+  .lab__price { font-weight: 800; font-size: var(--t-lead); color: var(--gold-lo); white-space: nowrap; }
+  @media (max-width: 560px) {
+    .lab__row { grid-template-columns: 1fr auto; }
+    .lab__row > :global(*:last-child) { grid-column: 1 / -1; justify-self: start; }
+  }
+</style>

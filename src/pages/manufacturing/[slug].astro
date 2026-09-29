@@ -1,0 +1,88 @@
+---
+import Base from '../../layouts/Base.astro'
+import { FORMATS, QUOTE_ONLY } from '../../data/formats'
+import { CLIENT_PRODUCTS } from '../../data/clients'
+import { COMPONENTS } from '../../data/packaging'
+
+export function getStaticPaths() {
+  return FORMATS.map((format) => ({ params: { slug: format.slug }, props: { format } }))
+}
+
+const { format } = Astro.props
+const made = CLIENT_PRODUCTS.filter((c) => c.format.toLowerCase().includes(format.name.toLowerCase().split(' ')[0]))
+---
+<Base
+  title={`${format.name} manufacturing — MOQ ${format.moq}`}
+  description={`${format.summary} Packed in ${format.packaging.join(', ').toLowerCase()}. MOQ ${format.moq}, lead time ${format.leadTime}.`}
+  darkHeader
+>
+  <section class="section--dark fhero">
+    <div class="page">
+      <p class="micro"><a href="/manufacturing">Manufacturing</a></p>
+      <h1 style="margin-top: var(--s3)">{format.name}</h1>
+      <p class="lead fhero__lead">{format.summary}</p>
+
+      <div class="stats fhero__stats">
+        <div class="stat"><span class="micro">Minimum order</span><strong>{format.moq}</strong></div>
+        <div class="stat"><span class="micro">Lead time</span><strong>{format.leadTime}</strong></div>
+        <div class="stat"><span class="micro">Price</span><strong>Quoted</strong><span class="micro">against volume and market</span></div>
+      </div>
+
+      <div class="btn-row">
+        <a href={`/quote?format=${format.slug}`} class="btn btn--primary">Quote this format</a>
+        <a href="/packaging" class="btn btn--ghost">Packaging options</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="page split">
+      <div>
+        <span class="eyebrow">Specification</span>
+        <h2>What we can make</h2>
+      </div>
+      <div class="stack-6">
+        <div>
+          <h3 class="micro" style="margin-bottom: var(--s3)">Variants</h3>
+          <ul class="chips">{format.variants.map((v) => <li class="tag">{v}</li>)}</ul>
+        </div>
+        <div>
+          <h3 class="micro" style="margin-bottom: var(--s3)">Packed in</h3>
+          <ul class="chips">{format.packaging.map((p) => <li class="tag">{p}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {format.examples.length > 0 && (
+    <section class="section section--ground">
+      <div class="page split">
+        <div>
+          <span class="eyebrow">Made here</span>
+          <h2>Products we have run in this format</h2>
+        </div>
+        <ul class="inclusions">
+          {format.examples.map((e) => <li>{e}</li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="page">
+      <span class="eyebrow">Next</span>
+      <h2>Getting a price</h2>
+      <p class="lead" style="margin-top: var(--s5); max-width: 50ch">{QUOTE_ONLY}</p>
+      <div class="btn-row" style="margin-top: var(--s6)">
+        <a href={`/quote?format=${format.slug}`} class="btn btn--primary">Build a quote</a>
+        <a href="/shop/design" class="btn btn--ghost">Buy the artwork for it</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fhero { padding-block: var(--s8); }
+  .fhero__lead { margin-top: var(--s5); max-width: 50ch; }
+  .fhero__stats { margin: var(--s8) 0 var(--s6); padding-top: var(--s5); border-top: 1px solid var(--rule-dark); max-width: 760px; }
+</style>
